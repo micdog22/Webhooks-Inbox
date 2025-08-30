@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>MicDog Webhooks Inbox</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./app.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <header class="container">
+    <h1>MicDog Webhooks Inbox</h1>
+    <p>Crie canais, receba e inspecione webhooks com segurança.</p>
+  </header>
+
+  <section class="container grid-3 cards">
+    <div class="card">
+      <div class="muted">Canais</div>
+      <div id="totalChannels" class="stat">0</div>
+    </div>
+    <div class="card">
+      <div class="muted">Eventos</div>
+      <div id="totalEvents" class="stat">0</div>
+    </div>
+    <div class="card">
+      <div class="muted">Endpoint de exemplo</div>
+      <div id="sampleEndpoint" class="stat small">—</div>
+    </div>
+  </section>
+
+  <section class="container">
+    <h2>Novo canal</h2>
+    <form id="formChannel" class="grid-6">
+      <input type="text" name="name" placeholder="Nome do canal" required />
+      <input type="text" name="token" placeholder="Token opcional (12-64 alfanumérico)" />
+      <div style="grid-column: span 3;"></div>
+      <button type="submit">Criar canal</button>
+    </form>
+  </section>
+
+  <section class="container">
+    <h2>Canais</h2>
+    <div class="table-wrap">
+      <table class="table" id="tblChannels">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Token</th>
+            <th>Endpoint</th>
+            <th class="actions">Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="container filters">
+    <div class="row">
+      <label>Canal
+        <select id="filterChannel"></select>
+      </label>
+      <label>De
+        <input type="date" id="from" />
+      </label>
+      <label>Até
+        <input type="date" id="to" />
+      </label>
+      <label>Buscar
+        <input type="text" id="q" placeholder="Método, path, cabeçalho, corpo..." />
+      </label>
+      <button id="btnFilter">Filtrar</button>
+      <button id="btnClear">Limpar</button>
+      <button id="btnExport">Exportar CSV</button>
+    </div>
+  </section>
+
+  <section class="container">
+    <canvas id="chart" height="120"></canvas>
+  </section>
+
+  <section class="container">
+    <h2>Eventos recentes</h2>
+    <div class="table-wrap">
+      <table class="table" id="tblEvents">
+        <thead>
+          <tr>
+            <th>Quando</th>
+            <th>Canal</th>
+            <th>Método</th>
+            <th>Path</th>
+            <th class="actions">Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <dialog id="dlgEvent">
+    <div class="grid-6">
+      <h3 style="grid-column: span 6;">Detalhes do evento</h3>
+      <div class="muted" id="evHeader" style="grid-column: span 6;"></div>
+      <div style="grid-column: span 3;">
+        <h4>Cabeçalhos</h4>
+        <pre id="evHeaders" class="pre"></pre>
+      </div>
+      <div style="grid-column: span 3;">
+        <h4>Query</h4>
+        <pre id="evQuery" class="pre"></pre>
+      </div>
+      <div style="grid-column: span 6;">
+        <h4>Body</h4>
+        <pre id="evBody" class="pre"></pre>
+      </div>
+
+      <h4 style="grid-column: span 6;">Reenviar</h4>
+      <form id="formReplay" class="grid-6">
+        <input type="hidden" name="id" />
+        <input type="url" name="url" placeholder="https://destino.exemplo/endpoint" required />
+        <select name="method">
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+          <option>GET</option>
+        </select>
+        <select name="bodyMode">
+          <option value="original">Usar body original</option>
+          <option value="raw">Definir body manualmente</option>
+        </select>
+        <textarea name="headers" placeholder='{"Content-Type":"application/json"}' style="grid-column: span 3; height: 80px;"></textarea>
+        <textarea name="rawBody" placeholder="Body manual (quando bodyMode=raw)" style="grid-column: span 6; height: 120px;"></textarea>
+        <menu>
+          <button type="submit">Enviar</button>
+          <button type="button" id="btnCloseEvent">Fechar</button>
+        </menu>
+      </form>
+    </div>
+  </dialog>
+
+  <footer class="container muted">
+    <p>Ferramenta em PHP + HTML/JS. SQLite. Sem dependências externas.</p>
+  </footer>
+</body>
+</html>
