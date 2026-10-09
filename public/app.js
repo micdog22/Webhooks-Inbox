@@ -49,7 +49,7 @@ async function loadChannels() {
   if (j.items.length) {
     $('#sampleEndpoint').textContent = originIncoming(j.items[0].token);
   } else {
-    $('#sampleEndpoint').textContent = '—';
+    $('#sampleEndpoint').textContent = '-';
   }
 
   j.items.forEach(ch => {
